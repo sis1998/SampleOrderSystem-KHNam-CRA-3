@@ -13,6 +13,9 @@ public:
     std::vector<Order> getByStatus(OrderStatus status) const;
     bool transitionTo(const std::string& orderId, OrderStatus newStatus);
     void markStockDeducted(const std::string& orderId);
+    void restore(std::vector<Order> orders, int nextId);
+    std::vector<Order> getAll() const;
+    int getNextId() const;
 private:
     std::vector<Order> orders_;
     int nextId_ = 1;
