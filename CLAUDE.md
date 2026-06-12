@@ -7,6 +7,13 @@
 - [기능 명세 (PRD)](docs/PRD.md)
 - [제약사항 (CONSTRAINTS)](docs/CONSTRAINTS.md)
 
+구현 참조 PoC 레포지토리:
+
+- [ConsoleMVC](https://github.com/sis1998/ConsoleMVC-KHNam-CRA-3) — MVC 스켈레톤
+- [DataPersistence](https://github.com/sis1998/DataPersistence-KHNam-CRA-3) — nlohmann/json CRUD
+- [DataMonitor](https://github.com/sis1998/DataMonitor-KHNam-CRA-3) — 콘솔 실시간 모니터링
+- [DummyDataGenerator](https://github.com/sis1998/DummyDataGenerator-KHNam-CRA-3) — 더미 데이터 생성
+
 ## Build
 
 **환경:** Visual Studio 2022, MSVC v145, C++20, x64
