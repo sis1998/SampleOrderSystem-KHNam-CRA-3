@@ -202,6 +202,14 @@
     <ClCompile Include="test\OrderControllerTest.cpp" />
     <ClCompile Include="test\ProductionQueueTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controller\MonitorController.h" />
+    <ClInclude Include="src\controller\ProductionController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controller\MonitorController.cpp" />
+    <ClCompile Include="src\controller\ProductionController.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('packages\gmock.1.11.0\build\native\gmock.targets')" />
