@@ -1,10 +1,10 @@
 #include "SampleView.h"
 
 void SampleView::renderList(std::ostream& os, const std::vector<Sample>& samples) {
-    os << "=== Sample List ===\n";
+    os << "=== 시료 목록 ===\n";
     for (const auto& s : samples) {
         os << "[" << s.sampleId << "] " << s.name
-           << " | Stock: " << s.stock << "\n";
+           << " | 재고: " << s.stock << "\n";
     }
 }
 

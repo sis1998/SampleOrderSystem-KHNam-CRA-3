@@ -1,20 +1,20 @@
 #include "OrderView.h"
 
 void OrderView::renderReservedList(std::ostream& os, const std::vector<Order>& orders) {
-    os << "=== Reserved Orders ===\n";
+    os << "=== 승인 대기 주문 ===\n";
     for (const auto& o : orders) {
         os << "[" << o.orderId << "] " << o.sampleId
-           << " | Customer: " << o.customerName
-           << " | Qty: " << o.quantity << "\n";
+           << " | 고객: " << o.customerName
+           << " | 수량: " << o.quantity << "\n";
     }
 }
 
 void OrderView::renderConfirmedList(std::ostream& os, const std::vector<Order>& orders) {
-    os << "=== Confirmed Orders ===\n";
+    os << "=== 출고 대기 주문 ===\n";
     for (const auto& o : orders) {
         os << "[" << o.orderId << "] " << o.sampleId
-           << " | Customer: " << o.customerName
-           << " | Qty: " << o.quantity << "\n";
+           << " | 고객: " << o.customerName
+           << " | 수량: " << o.quantity << "\n";
     }
 }
 

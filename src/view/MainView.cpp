@@ -1,12 +1,12 @@
 #include "MainView.h"
 
 void MainView::renderHeader(std::ostream& os, int sampleCount, int totalStock, int orderCount, int queueSize) {
-    os << "=== Order Production System ===\n";
-    os << "Samples: " << sampleCount
-       << " | Stock: " << totalStock
-       << " | Orders: " << orderCount
-       << " | Queue: " << queueSize << "\n";
-    os << "================================\n";
+    os << "=== 주문 생산 관리 시스템 ===\n";
+    os << "시료: " << sampleCount
+       << " | 재고: " << totalStock
+       << " | 주문: " << orderCount
+       << " | 생산대기: " << queueSize << "\n";
+    os << "============================\n";
 }
 
 void MainView::renderMenu(std::ostream& os) {

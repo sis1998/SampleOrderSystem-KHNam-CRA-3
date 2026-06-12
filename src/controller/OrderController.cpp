@@ -55,18 +55,18 @@ void OrderController::approveReject(std::istream& in, std::ostream& out) {
             sampleModel_.deductStock(order.sampleId, order.quantity);
             orderModel_.markStockDeducted(order.orderId);
             orderModel_.transitionTo(order.orderId, OrderStatus::CONFIRMED);
-            view_.renderMessage(out, "승인 완료 (CONFIRMED).");
+            view_.renderMessage(out, "승인 완료 (출고대기).");
         } else {
             int shortfall = order.quantity - currentStock;
             double avgTime = sample ? sample->avgProductionTime : 0.0;
             double yield   = sample ? sample->yield : 1.0;
             orderModel_.transitionTo(order.orderId, OrderStatus::PRODUCING);
             queue_.enqueue(order.orderId, order.sampleId, shortfall, avgTime, yield);
-            view_.renderMessage(out, "재고 부족 — 생산 대기열 등록 (PRODUCING).");
+            view_.renderMessage(out, "재고 부족 — 생산 대기열 등록 (생산중).");
         }
     } else if (decision == "거절") {
         orderModel_.transitionTo(order.orderId, OrderStatus::REJECTED);
-        view_.renderMessage(out, "주문 거절 (REJECTED).");
+        view_.renderMessage(out, "주문 거절.");
     } else {
         view_.renderMessage(out, "잘못된 입력입니다.");
     }
@@ -95,5 +95,5 @@ void OrderController::release(std::istream& in, std::ostream& out) {
         sampleModel_.deductStock(order.sampleId, order.quantity);
     }
     orderModel_.transitionTo(order.orderId, OrderStatus::RELEASE);
-    view_.renderMessage(out, "출고 완료 (RELEASE).");
+    view_.renderMessage(out, "출고 완료.");
 }

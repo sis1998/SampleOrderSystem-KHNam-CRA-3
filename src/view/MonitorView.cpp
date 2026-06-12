@@ -1,20 +1,20 @@
 #include "MonitorView.h"
 
 void MonitorView::renderOrderCounts(std::ostream& os, const std::map<OrderStatus, int>& counts) {
-    os << "=== Order Counts ===\n";
+    os << "=== 주문 현황 ===\n";
     auto print = [&](OrderStatus status, const char* label) {
         auto it = counts.find(status);
         int count = (it != counts.end()) ? it->second : 0;
         os << label << ": " << count << "\n";
     };
-    print(OrderStatus::RESERVED,  "RESERVED");
-    print(OrderStatus::PRODUCING, "PRODUCING");
-    print(OrderStatus::CONFIRMED, "CONFIRMED");
-    print(OrderStatus::RELEASE,   "RELEASE");
+    print(OrderStatus::RESERVED,  "접수");
+    print(OrderStatus::PRODUCING, "생산중");
+    print(OrderStatus::CONFIRMED, "출고대기");
+    print(OrderStatus::RELEASE,   "출고완료");
 }
 
 void MonitorView::renderStockStatus(std::ostream& os, const std::vector<Sample>& samples, const std::vector<Order>& orders) {
-    os << "=== Stock Status ===\n";
+    os << "=== 재고 현황 ===\n";
     for (const auto& s : samples) {
         int demand = 0;
         for (const auto& o : orders) {
@@ -35,7 +35,7 @@ void MonitorView::renderStockStatus(std::ostream& os, const std::vector<Sample>&
             state = "여유";
         }
         os << "[" << s.sampleId << "] " << s.name
-           << " | Stock: " << s.stock
-           << " | Status: " << state << "\n";
+           << " | 재고: " << s.stock
+           << " | 상태: " << state << "\n";
     }
 }
