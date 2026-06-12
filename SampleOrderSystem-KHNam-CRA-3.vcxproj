@@ -198,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controller\OrderController.cpp" />
+    <ClCompile Include="src\model\ProductionQueue.cpp" />
     <ClCompile Include="test\OrderControllerTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
