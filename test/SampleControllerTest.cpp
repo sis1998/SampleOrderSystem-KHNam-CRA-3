@@ -2,6 +2,7 @@
 #include <sstream>
 #include "../src/model/SampleModel.h"
 #include "../src/controller/SampleController.h"
+#include "../src/view/SampleView.h"
 
 TEST(SampleControllerTest, Input0_ExitsImmediately) {
     SampleModel model;
@@ -43,4 +44,19 @@ TEST(SampleControllerTest, Input2_ListsAllSamples) {
     std::string output = out.str();
     EXPECT_NE(output.find("Silicon"), std::string::npos);
     EXPECT_NE(output.find("Germanium"), std::string::npos);
+}
+
+TEST(SampleViewTest, RenderIndexedList_ShowsNumberedEntries) {
+    SampleView view;
+    std::vector<Sample> samples = {
+        {"S-001", "Silicon",   0.5, 0.92, 100},
+        {"S-002", "Germanium", 1.0, 0.85,  50},
+    };
+    std::ostringstream out;
+    view.renderIndexedList(out, samples);
+    std::string s = out.str();
+    EXPECT_NE(s.find(" 1."), std::string::npos);
+    EXPECT_NE(s.find(" 2."), std::string::npos);
+    EXPECT_NE(s.find("S-001"), std::string::npos);
+    EXPECT_NE(s.find("S-002"), std::string::npos);
 }
