@@ -11,10 +11,16 @@ void OrderRepository::load(OrderModel& model, const std::string& path) {
     std::ifstream file(path);
     if (!file) return;
     nlohmann::json j;
-    file >> j;
+    try {
+        file >> j;
+    } catch (const nlohmann::json::parse_error&) {
+        return;
+    }
     std::vector<Order> orders;
-    for (const auto& item : j["orders"]) {
-        orders.push_back(orderFromJson(item));
+    if (j.contains("orders") && j["orders"].is_array()) {
+        for (const auto& item : j["orders"]) {
+            orders.push_back(orderFromJson(item));
+        }
     }
     int nextId = j.value("nextOrderId", 1);
     model.restore(std::move(orders), nextId);

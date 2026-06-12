@@ -11,7 +11,12 @@ void SampleRepository::load(SampleModel& model, const std::string& path) {
     std::ifstream file(path);
     if (!file) return;
     nlohmann::json j;
-    file >> j;
+    try {
+        file >> j;
+    } catch (const nlohmann::json::parse_error&) {
+        return;
+    }
+    if (!j.contains("samples") || !j["samples"].is_array()) return;
     for (const auto& item : j["samples"]) {
         model.add(sampleFromJson(item));
     }

@@ -30,5 +30,4 @@ private:
 
     void dispatch(const std::string& input);
     void saveAll();
-    void seedData();
 };

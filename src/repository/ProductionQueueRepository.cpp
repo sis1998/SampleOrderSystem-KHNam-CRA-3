@@ -32,6 +32,10 @@ void ProductionQueueRepository::load(ProductionQueue& queue, const std::string& 
 }
 
 void ProductionQueueRepository::save(const ProductionQueue& queue, const std::string& path) {
+    std::filesystem::path p(path);
+    if (p.has_parent_path()) {
+        std::filesystem::create_directories(p.parent_path());
+    }
     std::ofstream file(path);
     if (!file) return;
 
