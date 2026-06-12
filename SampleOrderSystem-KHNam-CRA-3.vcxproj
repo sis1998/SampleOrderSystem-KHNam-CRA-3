@@ -146,6 +146,13 @@
     <ClInclude Include="src\domain\Order.h" />
     <ClInclude Include="src\domain\Production.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\model\SampleModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\model\SampleModel.cpp" />
+    <ClCompile Include="test\SampleModelTest.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('packages\gmock.1.11.0\build\native\gmock.targets')" />
