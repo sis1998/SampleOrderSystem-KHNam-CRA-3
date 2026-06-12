@@ -60,3 +60,14 @@ TEST(SampleViewTest, RenderIndexedList_ShowsNumberedEntries) {
     EXPECT_NE(s.find("S-001"), std::string::npos);
     EXPECT_NE(s.find("S-002"), std::string::npos);
 }
+
+TEST(SampleViewTest, RenderList_ShowsIdAndName) {
+    SampleView view;
+    std::vector<Sample> samples = {{"S-001", "Silicon", 0.5, 0.92, 100}};
+    std::ostringstream out;
+    view.renderList(out, samples);
+    std::string s = out.str();
+    EXPECT_NE(s.find("[S-001]"), std::string::npos);
+    EXPECT_NE(s.find("Silicon"), std::string::npos);
+    EXPECT_NE(s.find("100"), std::string::npos);
+}
