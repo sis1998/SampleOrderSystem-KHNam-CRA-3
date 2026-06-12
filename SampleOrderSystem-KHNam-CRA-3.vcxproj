@@ -166,6 +166,8 @@
       <PreprocessorDefinitions>TESTING;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>vendor/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -266,6 +268,7 @@
   <ItemGroup>
     <ClCompile Include="src\infra\JsonSerializer.cpp" />
     <ClCompile Include="test\JsonSerializerTest.cpp" />
+    <ClCompile Include="test\InputParserTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\repository\SampleRepository.h" />
