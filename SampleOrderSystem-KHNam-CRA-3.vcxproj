@@ -163,9 +163,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TESTING;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;OSS_TEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,20 +178,35 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="test\smoke_test.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <!-- main.cpp는 Test 구성에서 제외한다 (gtest 자체 main 진입점 사용) -->
+    <ClCompile Include="src\main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Test|x64'">true</ExcludedFromBuild>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\infra\JsonFileReader.cpp" />
     <ClCompile Include="src\infra\JsonFileWriter.cpp" />
     <ClCompile Include="src\infra\JsonParser.cpp" />
     <ClCompile Include="src\app\ConsoleSetup.cpp" />
+    <!-- smoke_test: Test|x64 구성 전용 (upstream에서 추가된 항목) -->
+    <ClCompile Include="test\smoke_test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <!-- gmock_main.cc: Test|x64 전용 main() 진입점 (gtest/gmock 초기화 포함) -->
+    <ClCompile Include="packages\gmock.1.11.0\lib\native\src\gmock\src\gmock_main.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <!-- 인프라 테스트 파일: Test|x64 구성 전용 -->
+    <ClCompile Include="tests\infra\JsonFileReaderTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="tests\infra\JsonFileWriterTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="tests\infra\JsonParserTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="tests\infra\NlohmannIntegrationTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'!='Test|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
