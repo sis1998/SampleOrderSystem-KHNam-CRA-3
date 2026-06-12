@@ -75,3 +75,29 @@ TEST(ProductionQueueTest, Tick_WhenElapsed_CompletesAndUpdatesModelState) {
     ASSERT_TRUE(updatedSample.has_value());
     EXPECT_EQ(updatedSample->stock, 2);
 }
+
+TEST(ProductionQueueTest, TotalQueueSize_EmptyQueue_ReturnsZero) {
+    ProductionQueue q;
+    EXPECT_EQ(q.totalQueueSize(), 0);
+}
+
+TEST(ProductionQueueTest, TotalQueueSize_WithWaitingItems_CountsAll) {
+    ProductionQueue q;
+    q.enqueue("ORD-1", "S-001", 10, 1.0, 0.9);
+    q.enqueue("ORD-2", "S-001", 10, 1.0, 0.9);
+    // 2 waiting, no current
+    EXPECT_EQ(q.totalQueueSize(), 2);
+}
+
+TEST(ProductionQueueTest, TotalQueueSize_WithCurrent_IncludesCurrent) {
+    ProductionQueue q;
+    q.enqueue("ORD-1", "S-001", 10, 1.0, 0.9);
+    q.enqueue("ORD-2", "S-001", 10, 1.0, 0.9);
+
+    SampleModel sm;
+    OrderModel om;
+    q.tick(sm, om); // moves ORD-1 to current
+
+    // 1 current + 1 waiting = 2
+    EXPECT_EQ(q.totalQueueSize(), 2);
+}

@@ -13,6 +13,7 @@ public:
     bool tick(SampleModel& sm, OrderModel& om);
     std::optional<ProductionItem> getCurrent() const;
     std::deque<QueueItem> getWaiting() const;
+    int totalQueueSize() const;
 private:
     std::optional<ProductionItem> current_;
     std::deque<QueueItem> waiting_;

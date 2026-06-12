@@ -59,3 +59,7 @@ std::optional<ProductionItem> ProductionQueue::getCurrent() const {
 std::deque<QueueItem> ProductionQueue::getWaiting() const {
     return waiting_;
 }
+
+int ProductionQueue::totalQueueSize() const {
+    return static_cast<int>(waiting_.size()) + (current_.has_value() ? 1 : 0);
+}
