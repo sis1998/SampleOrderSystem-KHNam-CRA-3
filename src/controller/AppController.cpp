@@ -3,13 +3,23 @@
 #include <string>
 #include <numeric>
 
+static const std::string SAMPLES_PATH = "data/samples.json";
+static const std::string ORDERS_PATH  = "data/orders.json";
+static const std::string QUEUE_PATH   = "data/production_queue.json";
+
 AppController::AppController()
     : sampleCtrl_(sampleModel_)
     , orderCtrl_(sampleModel_, orderModel_, productionQueue_)
     , monitorCtrl_(sampleModel_, orderModel_)
     , productionCtrl_(productionQueue_)
 {
-    // 시드 데이터
+    sampleRepo_.load(sampleModel_, SAMPLES_PATH);
+    orderRepo_.load(orderModel_, ORDERS_PATH);
+    queueRepo_.load(productionQueue_, QUEUE_PATH);
+    if (sampleModel_.getAll().empty()) seedData();
+}
+
+void AppController::seedData() {
     Sample s1;
     s1.sampleId = "S-001";
     s1.name = "실리콘 웨이퍼-8인치";
@@ -87,4 +97,11 @@ void AppController::dispatch(const std::string& input) {
     } else if (input == "6") {
         orderCtrl_.release(std::cin, std::cout);
     }
+    saveAll();
+}
+
+void AppController::saveAll() {
+    sampleRepo_.save(sampleModel_, SAMPLES_PATH);
+    orderRepo_.save(orderModel_, ORDERS_PATH);
+    queueRepo_.save(productionQueue_, QUEUE_PATH);
 }
