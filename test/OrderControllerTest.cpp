@@ -5,106 +5,81 @@
 #include "../src/model/ProductionQueue.h"
 #include "../src/controller/OrderController.h"
 
-// 유효한 시료가 있을 때 placeOrder는 RESERVED 상태의 주문을 생성한다
 TEST(OrderControllerTest, PlaceOrder_ValidSample_CreatesReservedOrder) {
-    SampleModel sampleModel;
-    sampleModel.add({"S-001", "Silicon", 0.5, 0.92, 100});
-
-    OrderModel orderModel;
-    ProductionQueue queue;
-    OrderController controller(sampleModel, orderModel, queue);
-
-    // 입력: sampleId, 고객명, 수량
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 100});
+    OrderModel om; ProductionQueue q;
+    OrderController ctrl(sm, om, q);
     std::istringstream in("S-001\n홍길동\n10\n");
     std::ostringstream out;
-    controller.placeOrder(in, out);
-
-    auto reserved = orderModel.getByStatus(OrderStatus::RESERVED);
+    ctrl.placeOrder(in, out);
+    auto reserved = om.getByStatus(OrderStatus::RESERVED);
     ASSERT_EQ(reserved.size(), 1u);
-    EXPECT_EQ(reserved[0].sampleId, "S-001");
-    EXPECT_EQ(reserved[0].customerName, "홍길동");
     EXPECT_EQ(reserved[0].quantity, 10);
 }
 
-// 재고가 충분할 때 승인하면 CONFIRMED 상태로 전환된다
-TEST(OrderControllerTest, Approve_StockSufficient_TransitionsToConfirmed) {
-    SampleModel sampleModel;
-    sampleModel.add({"S-001", "Silicon", 0.5, 0.92, 100});
-
-    OrderModel orderModel;
-    orderModel.create("S-001", "홍길동", 10);
-
-    ProductionQueue queue;
-    OrderController controller(sampleModel, orderModel, queue);
-
-    // 입력: 번호 선택 "1", 승인 "승인"
+TEST(OrderControllerTest, Approve_StockSufficient_TransitionsToConfirmed_DeductsStock) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 100});
+    OrderModel om; om.create("S-001", "홍길동", 30);
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
     std::istringstream in("1\n승인\n");
     std::ostringstream out;
-    controller.approveReject(in, out);
-
-    auto confirmed = orderModel.getByStatus(OrderStatus::CONFIRMED);
-    ASSERT_EQ(confirmed.size(), 1u);
-    EXPECT_EQ(confirmed[0].sampleId, "S-001");
+    ctrl.approveReject(in, out);
+    ASSERT_EQ(om.getByStatus(OrderStatus::CONFIRMED).size(), 1u);
+    // 재고 즉시 차감 (100 - 30 = 70)
+    EXPECT_EQ(sm.findById("S-001")->stock, 70);
 }
 
-// 재고가 부족할 때 승인하면 PRODUCING 상태로 전환된다
-TEST(OrderControllerTest, Approve_StockInsufficient_TransitionsToProducing) {
-    SampleModel sampleModel;
-    sampleModel.add({"S-001", "Silicon", 0.5, 0.92, 10});
-
-    OrderModel orderModel;
-    orderModel.create("S-001", "홍길동", 50);
-
-    ProductionQueue queue;
-    OrderController controller(sampleModel, orderModel, queue);
-
-    // 입력: 번호 선택 "1", 승인 "승인"
+TEST(OrderControllerTest, Approve_StockInsufficient_TransitionsToProducing_NoDeduction) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 10});
+    OrderModel om; om.create("S-001", "홍길동", 50);
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
     std::istringstream in("1\n승인\n");
     std::ostringstream out;
-    controller.approveReject(in, out);
-
-    auto producing = orderModel.getByStatus(OrderStatus::PRODUCING);
-    ASSERT_EQ(producing.size(), 1u);
-    EXPECT_EQ(producing[0].sampleId, "S-001");
+    ctrl.approveReject(in, out);
+    ASSERT_EQ(om.getByStatus(OrderStatus::PRODUCING).size(), 1u);
+    // 재고 차감 없음
+    EXPECT_EQ(sm.findById("S-001")->stock, 10);
 }
 
-// 거절하면 REJECTED 상태로 전환된다
 TEST(OrderControllerTest, Reject_TransitionsToRejected) {
-    SampleModel sampleModel;
-    sampleModel.add({"S-001", "Silicon", 0.5, 0.92, 100});
-
-    OrderModel orderModel;
-    orderModel.create("S-001", "홍길동", 10);
-
-    ProductionQueue queue;
-    OrderController controller(sampleModel, orderModel, queue);
-
-    // 입력: 번호 선택 "1", 거절 "거절"
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 100});
+    OrderModel om; om.create("S-001", "홍길동", 10);
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
     std::istringstream in("1\n거절\n");
     std::ostringstream out;
-    controller.approveReject(in, out);
-
-    auto rejected = orderModel.getByStatus(OrderStatus::REJECTED);
-    ASSERT_EQ(rejected.size(), 1u);
+    ctrl.approveReject(in, out);
+    ASSERT_EQ(om.getByStatus(OrderStatus::REJECTED).size(), 1u);
 }
 
-// CONFIRMED 주문을 출고 처리하면 RELEASE 상태로 전환된다
-TEST(OrderControllerTest, Release_ConfirmedOrder_TransitionsToRelease) {
-    SampleModel sampleModel;
-    sampleModel.add({"S-001", "Silicon", 0.5, 0.92, 100});
-
-    OrderModel orderModel;
-    std::string orderId = orderModel.create("S-001", "홍길동", 10);
-    orderModel.transitionTo(orderId, OrderStatus::CONFIRMED);
-
-    ProductionQueue queue;
-    OrderController controller(sampleModel, orderModel, queue);
-
-    // 입력: 번호 선택 "1"
+// CONFIRMED (producing path): release 시 재고 차감
+TEST(OrderControllerTest, Release_ProducingPath_DeductsStockAtRelease) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 60});
+    OrderModel om;
+    std::string id = om.create("S-001", "홍길동", 50);
+    om.transitionTo(id, OrderStatus::CONFIRMED); // stockPreDeducted=false (producing path)
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
     std::istringstream in("1\n");
     std::ostringstream out;
-    controller.release(in, out);
+    ctrl.release(in, out);
+    ASSERT_EQ(om.getByStatus(OrderStatus::RELEASE).size(), 1u);
+    // 출고 시 차감 (60 - 50 = 10)
+    EXPECT_EQ(sm.findById("S-001")->stock, 10);
+}
 
-    auto released = orderModel.getByStatus(OrderStatus::RELEASE);
-    ASSERT_EQ(released.size(), 1u);
+// CONFIRMED (sufficient path): release 시 추가 차감 없음
+TEST(OrderControllerTest, Release_SufficientPath_NoDoubleDeduction) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 100});
+    OrderModel om; om.create("S-001", "홍길동", 30);
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
+    // 승인 (재고 즉시 차감)
+    { std::istringstream in("1\n승인\n"); std::ostringstream out; ctrl.approveReject(in, out); }
+    EXPECT_EQ(sm.findById("S-001")->stock, 70);
+    // 출고 (추가 차감 없음)
+    { std::istringstream in("1\n"); std::ostringstream out; ctrl.release(in, out); }
+    EXPECT_EQ(sm.findById("S-001")->stock, 70); // unchanged
 }

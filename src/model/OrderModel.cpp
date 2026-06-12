@@ -66,3 +66,9 @@ bool OrderModel::transitionTo(const std::string& orderId, OrderStatus newStatus)
     }
     return false;
 }
+
+void OrderModel::markStockDeducted(const std::string& orderId) {
+    for (auto& o : orders_) {
+        if (o.orderId == orderId) { o.stockPreDeducted = true; return; }
+    }
+}

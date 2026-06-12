@@ -4,15 +4,14 @@ OrderController::OrderController(SampleModel& sm, OrderModel& om, ProductionQueu
     : sampleModel_(sm), orderModel_(om), queue_(q) {}
 
 void OrderController::placeOrder(std::istream& in, std::ostream& out) {
-    std::string sampleId, customerName;
-    int quantity = 0;
+    std::string sampleId, customerName, qtyStr;
 
-    out << "시료 ID를 입력하세요: ";
-    in >> sampleId;
-    out << "고객명을 입력하세요: ";
-    in >> customerName;
-    out << "수량을 입력하세요: ";
-    in >> quantity;
+    out << "시료 ID: ";
+    std::getline(in, sampleId);
+    out << "고객명: ";
+    std::getline(in, customerName);
+    out << "수량: ";
+    std::getline(in, qtyStr);
 
     auto sample = sampleModel_.findById(sampleId);
     if (!sample) {
@@ -20,22 +19,23 @@ void OrderController::placeOrder(std::istream& in, std::ostream& out) {
         return;
     }
 
+    int quantity = std::stoi(qtyStr);
     std::string orderId = orderModel_.create(sampleId, customerName, quantity);
-    view_.renderMessage(out, "주문이 접수되었습니다. 주문 ID: " + orderId);
+    view_.renderMessage(out, "주문 접수 완료. 주문 ID: " + orderId);
 }
 
 void OrderController::approveReject(std::istream& in, std::ostream& out) {
     auto reserved = orderModel_.getByStatus(OrderStatus::RESERVED);
     if (reserved.empty()) {
-        view_.renderMessage(out, "승인 대기 중인 주문이 없습니다.");
+        view_.renderMessage(out, "승인 대기 주문이 없습니다.");
         return;
     }
 
     view_.renderReservedList(out, reserved);
-    out << "번호를 선택하세요: ";
-
-    int choice = 0;
-    in >> choice;
+    out << "번호 선택: ";
+    std::string choiceStr;
+    std::getline(in, choiceStr);
+    int choice = std::stoi(choiceStr);
 
     if (choice < 1 || choice > static_cast<int>(reserved.size())) {
         view_.renderMessage(out, "잘못된 선택입니다.");
@@ -43,9 +43,9 @@ void OrderController::approveReject(std::istream& in, std::ostream& out) {
     }
 
     const Order& order = reserved[choice - 1];
-    out << "승인 또는 거절을 입력하세요 (승인/거절): ";
+    out << "승인/거절: ";
     std::string decision;
-    in >> decision;
+    std::getline(in, decision);
 
     if (decision == "승인") {
         auto sample = sampleModel_.findById(order.sampleId);
@@ -53,19 +53,20 @@ void OrderController::approveReject(std::istream& in, std::ostream& out) {
 
         if (currentStock >= order.quantity) {
             sampleModel_.deductStock(order.sampleId, order.quantity);
+            orderModel_.markStockDeducted(order.orderId);
             orderModel_.transitionTo(order.orderId, OrderStatus::CONFIRMED);
-            view_.renderMessage(out, "주문이 승인되었습니다.");
+            view_.renderMessage(out, "승인 완료 (CONFIRMED).");
         } else {
             int shortfall = order.quantity - currentStock;
             double avgTime = sample ? sample->avgProductionTime : 0.0;
-            double yield = sample ? sample->yield : 1.0;
+            double yield   = sample ? sample->yield : 1.0;
             orderModel_.transitionTo(order.orderId, OrderStatus::PRODUCING);
             queue_.enqueue(order.orderId, order.sampleId, shortfall, avgTime, yield);
-            view_.renderMessage(out, "재고 부족으로 생산 대기열에 추가되었습니다.");
+            view_.renderMessage(out, "재고 부족 — 생산 대기열 등록 (PRODUCING).");
         }
     } else if (decision == "거절") {
         orderModel_.transitionTo(order.orderId, OrderStatus::REJECTED);
-        view_.renderMessage(out, "주문이 거절되었습니다.");
+        view_.renderMessage(out, "주문 거절 (REJECTED).");
     } else {
         view_.renderMessage(out, "잘못된 입력입니다.");
     }
@@ -79,10 +80,10 @@ void OrderController::release(std::istream& in, std::ostream& out) {
     }
 
     view_.renderConfirmedList(out, confirmed);
-    out << "번호를 선택하세요: ";
-
-    int choice = 0;
-    in >> choice;
+    out << "번호 선택: ";
+    std::string choiceStr;
+    std::getline(in, choiceStr);
+    int choice = std::stoi(choiceStr);
 
     if (choice < 1 || choice > static_cast<int>(confirmed.size())) {
         view_.renderMessage(out, "잘못된 선택입니다.");
@@ -90,6 +91,9 @@ void OrderController::release(std::istream& in, std::ostream& out) {
     }
 
     const Order& order = confirmed[choice - 1];
+    if (!order.stockPreDeducted) {
+        sampleModel_.deductStock(order.sampleId, order.quantity);
+    }
     orderModel_.transitionTo(order.orderId, OrderStatus::RELEASE);
-    view_.renderMessage(out, "주문이 출고 처리되었습니다.");
+    view_.renderMessage(out, "출고 완료 (RELEASE).");
 }

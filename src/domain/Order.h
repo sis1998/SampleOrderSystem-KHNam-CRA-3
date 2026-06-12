@@ -10,4 +10,5 @@ struct Order {
     int quantity = 0;
     OrderStatus status = OrderStatus::RESERVED;
     std::string createdAt;
+    bool stockPreDeducted = false; // true when stock was deducted at approval
 };
