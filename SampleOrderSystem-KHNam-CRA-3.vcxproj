@@ -231,10 +231,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\repository\SampleRepository.h" />
+    <ClInclude Include="src\repository\OrderRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\repository\SampleRepository.cpp" />
     <ClCompile Include="test\SampleRepositoryTest.cpp" />
+    <ClCompile Include="src\repository\OrderRepository.cpp" />
+    <ClCompile Include="test\OrderRepositoryTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
