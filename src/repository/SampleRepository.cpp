@@ -9,6 +9,7 @@ void SampleRepository::load(SampleModel& model, const std::string& path) {
         return;
     }
     std::ifstream file(path);
+    if (!file) return;
     nlohmann::json j;
     file >> j;
     for (const auto& item : j["samples"]) {
@@ -27,5 +28,6 @@ void SampleRepository::save(const SampleModel& model, const std::string& path) {
         j["samples"].push_back(toJson(s));
     }
     std::ofstream file(path);
+    if (!file) return;
     file << j.dump(2);
 }
