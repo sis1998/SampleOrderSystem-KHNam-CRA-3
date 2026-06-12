@@ -2,7 +2,10 @@
 
 주문 생산 관리 시스템 (Order Production Management System) — 콘솔 기반 통합 솔루션으로, 주문 내역·재고 현황·생산 상황을 실시간으로 관리한다. 모든 데이터는 JSON 파일로 영속화된다.
 
-요구사항 및 제약사항은 한글로 작성되어 `docs/` 아래에 추가된다. 해당 문서를 우선 참조한다.
+요구사항 및 제약사항은 한글로 작성되며 아래 문서를 우선 참조한다.
+
+- [기능 명세 (PRD)](docs/PRD.md)
+- [제약사항 (CONSTRAINTS)](docs/CONSTRAINTS.md)
 
 ## Build
 
@@ -40,7 +43,7 @@ vstest.console.exe x64\Debug\... --TestCaseFilter:"FullyQualifiedName~OrderServi
 | **Realtime** | 이벤트/상태 변경을 즉시 반영하는 루프 또는 콜백 구조 |
 
 - 비즈니스 로직과 I/O(JSON, 콘솔)는 분리해 테스트 가능하게 설계한다.
-- 도메인 요구사항·제약사항 상세는 `docs/` 아래 문서를 참조한다 (추가 예정).
+- 도메인 요구사항·제약사항 상세는 `docs/` 아래 문서를 참조한다.
 
 ## Key Constraints
 
