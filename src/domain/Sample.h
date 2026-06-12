@@ -1,15 +1,10 @@
 #pragma once
-
 #include <string>
 
-namespace domain {
-
 struct Sample {
-    std::string sampleId;          // user-assigned, e.g. "S-001"
+    std::string sampleId;
     std::string name;
-    double      avgProductionTime; // minutes per each
-    double      yield;             // 0 < yield <= 1
-    int         stock;
+    double avgProductionTime = 0.0;
+    double yield = 1.0;
+    int stock = 0;
 };
-
-} // namespace domain
