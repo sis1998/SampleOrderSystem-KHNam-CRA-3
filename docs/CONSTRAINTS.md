@@ -8,6 +8,7 @@
 | 빌드 환경 | Visual Studio 2022, MSVC v145 |
 | UI | 콘솔(Console) 전용 — GUI 없음 |
 | 데이터 영속성 | JSON 파일만 사용 — 외부 DB 없음 |
+| JSON 라이브러리 | nlohmann/json v3.11.3 (단일 헤더, `vendor/json.hpp`) |
 | 테스트 프레임워크 | Google Mock / Google Test (NuGet gmock 1.11.0) |
 | 아키텍처 패턴 | MVC (Model / Controller / View 역할 분리) |
 | 스레드 모델 | 단일 스레드 — 동시성 이슈 없음 |
@@ -55,3 +56,4 @@
 - JSON 파일은 프로젝트 루트 기준 `data/` 디렉터리 하위에 위치
 - 파일 분리: `data/samples.json` / `data/orders.json` / `data/production_queue.json`
 - 스키마 상세 → [PRD.md](PRD.md) JSON 데이터 스키마 참조
+- JSON 파일 저장 포맷: 2칸 들여쓰기(`dump(2)`), UTF-8 인코딩
