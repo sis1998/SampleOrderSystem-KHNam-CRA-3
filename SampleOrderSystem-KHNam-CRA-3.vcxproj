@@ -199,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="src\controller\OrderController.cpp" />
     <ClCompile Include="src\model\ProductionQueue.cpp" />
+    <ClCompile Include="test\MonitorControllerTest.cpp" />
     <ClCompile Include="test\OrderControllerTest.cpp" />
     <ClCompile Include="test\ProductionQueueTest.cpp" />
   </ItemGroup>

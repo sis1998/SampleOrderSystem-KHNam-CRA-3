@@ -7,27 +7,22 @@ MonitorController::MonitorController(SampleModel& sampleModel, OrderModel& order
     : sampleModel_(sampleModel), orderModel_(orderModel) {}
 
 void MonitorController::run(std::istream& in, std::ostream& out) {
-    // 주문 상태별 개수 계산 (REJECTED 제외)
-    std::map<OrderStatus, int> counts;
-    counts[OrderStatus::RESERVED] = static_cast<int>(orderModel_.getByStatus(OrderStatus::RESERVED).size());
-    counts[OrderStatus::PRODUCING] = static_cast<int>(orderModel_.getByStatus(OrderStatus::PRODUCING).size());
-    counts[OrderStatus::CONFIRMED] = static_cast<int>(orderModel_.getByStatus(OrderStatus::CONFIRMED).size());
-    counts[OrderStatus::RELEASE] = static_cast<int>(orderModel_.getByStatus(OrderStatus::RELEASE).size());
+    auto reserved  = orderModel_.getByStatus(OrderStatus::RESERVED);
+    auto producing = orderModel_.getByStatus(OrderStatus::PRODUCING);
+    auto confirmed = orderModel_.getByStatus(OrderStatus::CONFIRMED);
+    auto released  = orderModel_.getByStatus(OrderStatus::RELEASE);
 
-    // 모든 활성 주문 조회
+    std::map<OrderStatus, int> counts;
+    counts[OrderStatus::RESERVED]  = static_cast<int>(reserved.size());
+    counts[OrderStatus::PRODUCING] = static_cast<int>(producing.size());
+    counts[OrderStatus::CONFIRMED] = static_cast<int>(confirmed.size());
+    counts[OrderStatus::RELEASE]   = static_cast<int>(released.size());
+
     std::vector<Order> allActiveOrders;
-    allActiveOrders.insert(allActiveOrders.end(),
-        orderModel_.getByStatus(OrderStatus::RESERVED).begin(),
-        orderModel_.getByStatus(OrderStatus::RESERVED).end());
-    allActiveOrders.insert(allActiveOrders.end(),
-        orderModel_.getByStatus(OrderStatus::PRODUCING).begin(),
-        orderModel_.getByStatus(OrderStatus::PRODUCING).end());
-    allActiveOrders.insert(allActiveOrders.end(),
-        orderModel_.getByStatus(OrderStatus::CONFIRMED).begin(),
-        orderModel_.getByStatus(OrderStatus::CONFIRMED).end());
-    allActiveOrders.insert(allActiveOrders.end(),
-        orderModel_.getByStatus(OrderStatus::RELEASE).begin(),
-        orderModel_.getByStatus(OrderStatus::RELEASE).end());
+    allActiveOrders.insert(allActiveOrders.end(), reserved.begin(),  reserved.end());
+    allActiveOrders.insert(allActiveOrders.end(), producing.begin(), producing.end());
+    allActiveOrders.insert(allActiveOrders.end(), confirmed.begin(), confirmed.end());
+    allActiveOrders.insert(allActiveOrders.end(), released.begin(),  released.end());
 
     view_.renderOrderCounts(out, counts);
     view_.renderStockStatus(out, sampleModel_.getAll(), allActiveOrders);
