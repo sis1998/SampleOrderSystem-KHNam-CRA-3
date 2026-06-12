@@ -6,6 +6,7 @@
 
 - [기능 명세 (PRD)](docs/PRD.md)
 - [제약사항 (CONSTRAINTS)](docs/CONSTRAINTS.md)
+- [코드 컨벤션 (CONVENTIONS)](docs/CONVENTIONS.md)
 
 구현 참조 PoC 레포지토리:
 

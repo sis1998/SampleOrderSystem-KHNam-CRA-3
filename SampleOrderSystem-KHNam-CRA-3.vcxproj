@@ -90,6 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,6 +109,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +126,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +145,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,6 +182,79 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\domain\Sample.h" />
+    <ClInclude Include="src\domain\Order.h" />
+    <ClInclude Include="src\domain\Production.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\model\SampleModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\model\SampleModel.cpp" />
+    <ClCompile Include="test\SampleModelTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\model\OrderModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\model\OrderModel.cpp" />
+    <ClCompile Include="test\OrderModelTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\infra\ConsoleSetup.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\infra\ConsoleSetup.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\view\MainView.h" />
+    <ClInclude Include="src\view\SampleView.h" />
+    <ClInclude Include="src\view\OrderView.h" />
+    <ClInclude Include="src\view\MonitorView.h" />
+    <ClInclude Include="src\view\ProductionView.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\view\MainView.cpp" />
+    <ClCompile Include="src\view\SampleView.cpp" />
+    <ClCompile Include="src\view\OrderView.cpp" />
+    <ClCompile Include="src\view\MonitorView.cpp" />
+    <ClCompile Include="src\view\ProductionView.cpp" />
+    <ClCompile Include="test\MainViewTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controller\SampleController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controller\SampleController.cpp" />
+    <ClCompile Include="test\SampleControllerTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controller\OrderController.h" />
+    <ClInclude Include="src\model\ProductionQueue.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controller\OrderController.cpp" />
+    <ClCompile Include="src\model\ProductionQueue.cpp" />
+    <ClCompile Include="test\MonitorControllerTest.cpp" />
+    <ClCompile Include="test\OrderControllerTest.cpp" />
+    <ClCompile Include="test\ProductionQueueTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controller\MonitorController.h" />
+    <ClInclude Include="src\controller\ProductionController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controller\MonitorController.cpp" />
+    <ClCompile Include="src\controller\ProductionController.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controller\AppController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controller\AppController.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
