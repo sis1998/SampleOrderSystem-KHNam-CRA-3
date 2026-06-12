@@ -1,0 +1,33 @@
+# Temporary docs (drafts, source materials)
+tmp_*
+docs/tmp_docs/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+ipch/
+
+# Build output
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.lib
+*.exp
+*.dll
+
+# NuGet
+packages/
+*.nupkg
