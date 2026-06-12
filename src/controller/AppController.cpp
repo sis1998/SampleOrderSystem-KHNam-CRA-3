@@ -1,7 +1,7 @@
 #include "AppController.h"
 #include <iostream>
 #include <string>
-#include <numeric>
+#include <filesystem>
 
 static const std::string SAMPLES_PATH = "data/samples.json";
 static const std::string ORDERS_PATH  = "data/orders.json";
@@ -16,7 +16,7 @@ AppController::AppController()
     sampleRepo_.load(sampleModel_, SAMPLES_PATH);
     orderRepo_.load(orderModel_, ORDERS_PATH);
     queueRepo_.load(productionQueue_, QUEUE_PATH);
-    if (sampleModel_.getAll().empty()) seedData();
+    if (!std::filesystem::exists(SAMPLES_PATH)) seedData();
 }
 
 void AppController::seedData() {
