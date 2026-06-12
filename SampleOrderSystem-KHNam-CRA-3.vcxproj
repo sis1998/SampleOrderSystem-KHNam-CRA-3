@@ -160,6 +160,12 @@
     <ClCompile Include="src\model\OrderModel.cpp" />
     <ClCompile Include="test\OrderModelTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\infra\ConsoleSetup.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\infra\ConsoleSetup.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('packages\gmock.1.11.0\build\native\gmock.targets')" />
