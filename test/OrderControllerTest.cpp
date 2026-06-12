@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include "../src/model/SampleModel.h"
 #include "../src/model/OrderModel.h"
 #include "../src/model/ProductionQueue.h"
@@ -68,6 +70,47 @@ TEST(OrderControllerTest, Release_ProducingPath_DeductsStockAtRelease) {
     ASSERT_EQ(om.getByStatus(OrderStatus::RELEASE).size(), 1u);
     // 출고 시 차감 (60 - 50 = 10)
     EXPECT_EQ(sm.findById("S-001")->stock, 10);
+}
+
+// 경계값: stock == qty → CONFIRMED, 재고 정확히 0
+TEST(OrderControllerTest, Approve_StockExactlyEqualsQty_TransitionsToConfirmed) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.5, 0.92, 30});
+    OrderModel om; om.create("S-001", "홍길동", 30);
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
+    std::istringstream in("1\n승인\n");
+    std::ostringstream out;
+    ctrl.approveReject(in, out);
+    ASSERT_EQ(om.getByStatus(OrderStatus::CONFIRMED).size(), 1u);
+    EXPECT_EQ(sm.findById("S-001")->stock, 0);
+}
+
+// 생산 완료 후 잉여 재고: PRODUCING → tick → CONFIRMED → RELEASE
+// stock=10, qty=12, shortfall=2, yield=0.9, avgTime=0.0001
+// actualQty=ceil(2/0.81)=3, estimatedMinutes=0.0003min=0.018sec → 150ms sleep 충분
+TEST(OrderControllerTest, ProducingPath_EndToEnd_StockCorrectAfterRelease) {
+    SampleModel sm; sm.add({"S-001", "Silicon", 0.0001, 0.9, 10});
+    OrderModel om;
+    om.create("S-001", "홍길동", 12); // shortfall=2
+    ProductionQueue q;
+    OrderController ctrl(sm, om, q);
+
+    // 승인 (재고 부족 → PRODUCING)
+    { std::istringstream in("1\n승인\n"); std::ostringstream out; ctrl.approveReject(in, out); }
+    ASSERT_EQ(om.getByStatus(OrderStatus::PRODUCING).size(), 1u);
+    EXPECT_EQ(sm.findById("S-001")->stock, 10); // 차감 없음
+
+    // 생산 완료 대기
+    q.tick(sm, om); // start production
+    std::this_thread::sleep_for(std::chrono::milliseconds(150));
+    q.tick(sm, om); // complete: addStock(3), order→CONFIRMED
+    ASSERT_EQ(om.getByStatus(OrderStatus::CONFIRMED).size(), 1u);
+    EXPECT_EQ(sm.findById("S-001")->stock, 13); // 10 + 3 = 13
+
+    // 출고 (재고 차감: qty=12, 잉여 1 보존)
+    { std::istringstream in("1\n"); std::ostringstream out; ctrl.release(in, out); }
+    ASSERT_EQ(om.getByStatus(OrderStatus::RELEASE).size(), 1u);
+    EXPECT_EQ(sm.findById("S-001")->stock, 1); // 13 - 12 = 1 (잉여)
 }
 
 // CONFIRMED (sufficient path): release 시 추가 차감 없음

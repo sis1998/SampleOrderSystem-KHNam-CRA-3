@@ -76,6 +76,13 @@ TEST(SampleModelTest, DeductStock_Insufficient_ReturnsFalse) {
     EXPECT_EQ(result->stock, 2);
 }
 
+TEST(SampleModelTest, DeductStock_ExactAmount_ReturnsZero) {
+    SampleModel model;
+    model.add({"S001", "Widget", 0.5, 0.9, 5});
+    EXPECT_TRUE(model.deductStock("S001", 5));
+    EXPECT_EQ(model.findById("S001")->stock, 0);
+}
+
 TEST(SampleModelTest, AddStock_IncreasesStock) {
     SampleModel model;
     Sample s;
