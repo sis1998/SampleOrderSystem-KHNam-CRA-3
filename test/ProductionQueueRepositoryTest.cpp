@@ -6,8 +6,6 @@
 #include <cstdio>
 
 TEST(ProductionQueueRepositoryTest, SaveAndLoad_WaitingItem) {
-    SampleModel sm; sm.add({"S-001", "Silicon", 0.0001, 0.9, 10});
-    OrderModel om; om.create("S-001", "홍길동", 20);
     ProductionQueue q;
     q.enqueue("ORD-1", "S-001", 10, 0.0001, 0.9);
 

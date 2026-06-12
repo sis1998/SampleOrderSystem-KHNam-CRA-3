@@ -10,16 +10,22 @@ void ProductionQueueRepository::load(ProductionQueue& queue, const std::string& 
     if (!file) return;
 
     nlohmann::json j;
-    file >> j;
+    try {
+        file >> j;
+    } catch (const nlohmann::json::parse_error&) {
+        return;
+    }
 
     std::optional<ProductionItem> current;
-    if (!j["current"].is_null()) {
+    if (j.contains("current") && !j["current"].is_null()) {
         current = productionItemFromJson(j["current"]);
     }
 
     std::deque<QueueItem> waiting;
-    for (const auto& item : j["queue"]) {
-        waiting.push_back(queueItemFromJson(item));
+    if (j.contains("queue") && j["queue"].is_array()) {
+        for (const auto& item : j["queue"]) {
+            waiting.push_back(queueItemFromJson(item));
+        }
     }
 
     queue.restore(std::move(current), std::move(waiting));
