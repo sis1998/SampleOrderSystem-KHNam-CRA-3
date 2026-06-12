@@ -229,6 +229,13 @@
     <ClCompile Include="src\infra\JsonSerializer.cpp" />
     <ClCompile Include="test\JsonSerializerTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\repository\SampleRepository.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\repository\SampleRepository.cpp" />
+    <ClCompile Include="test\SampleRepositoryTest.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('packages\gmock.1.11.0\build\native\gmock.targets')" />
