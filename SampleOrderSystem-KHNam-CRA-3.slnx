@@ -2,6 +2,9 @@
   <Configurations>
     <Platform Name="x64" />
     <Platform Name="x86" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Test" />
   </Configurations>
   <Project Path="SampleOrderSystem-KHNam-CRA-3.vcxproj" />
 </Solution>
