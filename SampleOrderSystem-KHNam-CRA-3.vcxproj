@@ -166,6 +166,21 @@
   <ItemGroup>
     <ClCompile Include="src\infra\ConsoleSetup.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\view\MainView.h" />
+    <ClInclude Include="src\view\SampleView.h" />
+    <ClInclude Include="src\view\OrderView.h" />
+    <ClInclude Include="src\view\MonitorView.h" />
+    <ClInclude Include="src\view\ProductionView.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\view\MainView.cpp" />
+    <ClCompile Include="src\view\SampleView.cpp" />
+    <ClCompile Include="src\view\OrderView.cpp" />
+    <ClCompile Include="src\view\MonitorView.cpp" />
+    <ClCompile Include="src\view\ProductionView.cpp" />
+    <ClCompile Include="test\MainViewTest.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('packages\gmock.1.11.0\build\native\gmock.targets')" />
