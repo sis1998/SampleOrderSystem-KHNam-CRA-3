@@ -7,11 +7,10 @@ void MonitorView::renderOrderCounts(std::ostream& os, const std::map<OrderStatus
         int count = (it != counts.end()) ? it->second : 0;
         os << label << ": " << count << "\n";
     };
-    print(OrderStatus::RESERVED,  "Reserved");
-    print(OrderStatus::PRODUCING, "Producing");
-    print(OrderStatus::CONFIRMED, "Confirmed");
-    print(OrderStatus::REJECTED,  "Rejected");
-    print(OrderStatus::RELEASE,   "Released");
+    print(OrderStatus::RESERVED,  "RESERVED");
+    print(OrderStatus::PRODUCING, "PRODUCING");
+    print(OrderStatus::CONFIRMED, "CONFIRMED");
+    print(OrderStatus::RELEASE,   "RELEASE");
 }
 
 void MonitorView::renderStockStatus(std::ostream& os, const std::vector<Sample>& samples, const std::vector<Order>& orders) {
@@ -29,11 +28,11 @@ void MonitorView::renderStockStatus(std::ostream& os, const std::vector<Sample>&
         }
         const char* state;
         if (s.stock == 0) {
-            state = "Depleted";
+            state = "고갈";
         } else if (s.stock <= demand) {
-            state = "Low";
+            state = "부족";
         } else {
-            state = "OK";
+            state = "여유";
         }
         os << "[" << s.sampleId << "] " << s.name
            << " | Stock: " << s.stock
