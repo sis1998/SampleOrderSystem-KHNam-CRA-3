@@ -63,3 +63,8 @@ std::deque<QueueItem> ProductionQueue::getWaiting() const {
 int ProductionQueue::totalQueueSize() const {
     return static_cast<int>(waiting_.size()) + (current_.has_value() ? 1 : 0);
 }
+
+void ProductionQueue::restore(std::optional<ProductionItem> current, std::deque<QueueItem> waiting) {
+    current_ = std::move(current);
+    waiting_ = std::move(waiting);
+}

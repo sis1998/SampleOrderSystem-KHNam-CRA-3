@@ -7,6 +7,9 @@
 #include "OrderController.h"
 #include "MonitorController.h"
 #include "ProductionController.h"
+#include "../repository/SampleRepository.h"
+#include "../repository/OrderRepository.h"
+#include "../repository/ProductionQueueRepository.h"
 
 class AppController {
 public:
@@ -21,6 +24,10 @@ private:
     OrderController orderCtrl_;
     MonitorController monitorCtrl_;
     ProductionController productionCtrl_;
+    SampleRepository sampleRepo_;
+    OrderRepository orderRepo_;
+    ProductionQueueRepository queueRepo_;
 
     void dispatch(const std::string& input);
+    void saveAll();
 };

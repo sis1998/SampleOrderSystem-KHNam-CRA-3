@@ -72,3 +72,16 @@ void OrderModel::markStockDeducted(const std::string& orderId) {
         if (o.orderId == orderId) { o.stockPreDeducted = true; return; }
     }
 }
+
+void OrderModel::restore(std::vector<Order> orders, int nextId) {
+    orders_ = std::move(orders);
+    nextId_ = nextId;
+}
+
+std::vector<Order> OrderModel::getAll() const {
+    return orders_;
+}
+
+int OrderModel::getNextId() const {
+    return nextId_;
+}

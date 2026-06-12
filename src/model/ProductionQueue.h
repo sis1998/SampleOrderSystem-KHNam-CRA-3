@@ -14,6 +14,7 @@ public:
     std::optional<ProductionItem> getCurrent() const;
     std::deque<QueueItem> getWaiting() const;
     int totalQueueSize() const;
+    void restore(std::optional<ProductionItem> current, std::deque<QueueItem> waiting);
 private:
     std::optional<ProductionItem> current_;
     std::deque<QueueItem> waiting_;
